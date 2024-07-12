@@ -1,3 +1,4 @@
+const {fontFamily} = require("tailwindcss/defaultTheme");
 import { Container } from "postcss";
 import type { Config } from "tailwindcss";
 
@@ -34,6 +35,9 @@ const config: Config = {
       },
       boxShadow: {
         bannerShadow : "0 1px 2px 1px #00000026",
+      },
+      fontFamily: {
+        sans : ["var(--font-open_sans)", ...fontFamily.sans]
       }
     },
     maxWidth:{
