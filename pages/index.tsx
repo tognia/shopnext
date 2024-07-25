@@ -1,8 +1,15 @@
 import Banner from "@/components/Banner";
 import Navbar from "@/components/Navbar";
+import Products from "@/components/Products";
+import { Product } from "@/type";
 import Head from "next/head";
 
-export default function Home() {
+interface Props {
+  productData : Product
+}
+
+export default function Home({productData}:Props) {
+
   return (
     <>
       <Head>
@@ -15,6 +22,7 @@ export default function Home() {
         <Navbar />
         <div className="max-w-contentContainer mx-auto bg-white">
           <Banner />
+          <Products productData={productData} />
         </div>
       </main>
     </>
@@ -28,7 +36,7 @@ export const getServerSideProps = async() => {
   ).json();
 
   return {
-    Props : {productData}
+    props : {productData}
   }
   
 }
