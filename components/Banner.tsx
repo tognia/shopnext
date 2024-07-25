@@ -11,6 +11,7 @@ import {
 } from "@/public/assets/images";
 import BannerText from "./BannerText";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import ButtonPrimary from "./ButtonPrimary";
 
 const SampleNextArrow = (props:any) => {
   const { onClick } = props;
@@ -27,8 +28,8 @@ const SampleNextArrow = (props:any) => {
   )
 }
 
-const SamplePrevArrow = (props:any) => {
-  const { onClick } = props;
+const SamplePrevArrow = (propsP:any) => {
+  const { onClick } = propsP;
   return (
   <div
       className="absolute bottom-12 left-6 w-12 h-8 border-[1px] shadow-md border-black
@@ -128,7 +129,14 @@ const Banner = () => {
         className="w-1/3 border-[1px] border-gray-200 rounded-lg shadow-bannerShadow
       p-4 flex flex-col justify-between"
       >
-
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-black">Flash Pic of the day</h2>
+          <p className="text-base text-zinc-600 underline underline-offset-2">View All</p>
+        </div>
+        <Image className="h-60 object-cover" src={bannerImg} alt="flashhsale" />
+        <ButtonPrimary btnText="Options" />
+        <p className="text-lg text-black font-semibold">From $199.90</p>
+        <p className="text-base text-gray-500 -mt-1">uhomepro TV Stand Cabinet for Living Room...</p>
       </div>
     </div>
   );

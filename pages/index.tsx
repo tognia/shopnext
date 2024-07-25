@@ -20,3 +20,15 @@ export default function Home() {
     </>
   );
 }
+
+//========================= SSR Data Fetching starts Here
+export const getServerSideProps = async() => {
+  const productData = await(
+    await fetch("http://localhost:3000/api/productdata")
+  ).json();
+
+  return {
+    Props : {productData}
+  }
+  
+}
