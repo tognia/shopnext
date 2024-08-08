@@ -43,7 +43,9 @@ const Products = ({ productData }: any) => {
                   isNew: item.isNew,
                   category: item.category
               }
-              }}>
+              }}
+              as={`product/${item._id}`}
+              >
                 <button
                 className="w-24 h-9 bg-white border-[1px] border-black text-black rounded-full flex 
                                items-center justify-center gap-1 hover:bg-black hover:text-white duration-300 "
@@ -76,9 +78,10 @@ const Products = ({ productData }: any) => {
                 <BsStarFill />
                 <BsStarFill />
                 <BsStarFill />
-                <p>25</p>
               </div>
+                <p className="text-zinc-800 ">25</p>              
             </div>
+           
           </div>
         </div>
       ))}
