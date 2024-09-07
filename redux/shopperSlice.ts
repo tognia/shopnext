@@ -1,6 +1,12 @@
+import { StoreProduct, UserInfo } from "../type";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface ShopperState{
+    productData:StoreProduct[];
+    userInfo : null | UserInfo;
+}
+
+const initialState:ShopperState = {
     productData:[],
     userInfo:null
 }
@@ -10,7 +16,16 @@ export const shopperSlice = createSlice({
     initialState,
     reducers : {
         addToCart : (state, action) => {
-            state.productData = action.payload;
+            const item = state.productData.find(
+                (item:StoreProduct) => item._id === action.payload._id
+            );
+            
+            if(item){
+                item.quantity += action.payload.quantity
+            } else {
+                state.productData.push(action.payload);
+            }
+            
         },
     },
 })

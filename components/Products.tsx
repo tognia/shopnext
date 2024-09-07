@@ -36,7 +36,8 @@ const Products = ({ productData }: any) => {
                   brand: item.brand,
                   image: item.image,
                   isNew: item.isNew,
-                  category: item.category
+                  category: item.category,
+                  quantity:1
                 }))}
                 className="w-20 h-9 bg-blue text-white rounded-full flex gap-1
                                items-center justify-center hover: bg-[#004f9a] duration-300 "
@@ -57,7 +58,8 @@ const Products = ({ productData }: any) => {
                   brand: item.brand,
                   image: item.image,
                   isNew: item.isNew,
-                  category: item.category
+                  category: item.category,
+                  quantity:item.quantity
               }
               }}
               as={`product/${item._id}`}
