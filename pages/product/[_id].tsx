@@ -1,4 +1,4 @@
-import { ship1Img } from "@/public/assets/images";
+import { ship1Img, ship2Img, ship3Img } from "@/public/assets/images";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { BsInfoCircle, BsStarFill } from "react-icons/bs";
@@ -47,8 +47,7 @@ const ProductDetails = () => {
               </div>
               <IoMdHeartEmpty className="text-gray-600 text-2xl" />
             </div>
-          </div>
-          {/* Product Infos */}
+           {/* Product Infos */}
           <div>
             <p className="text-zinc-800 text-sm underline underline-offset-4">
               {product.brand}
@@ -104,12 +103,38 @@ const ProductDetails = () => {
             <p className="text-base font-semibold text-zinc-800">
               How do you want your item ?
             </p>
-            <div>
-              <div>
+            <div className="w-full grid grid-cols-3 gap-4 text-xs">
+              <div className="text-zinc-800 w-full border border-zinc-400 rounded-md flex flex-col
+                              items-center justify-center p-2">
                 <Image className="w-10" src={ship1Img} alt="ship1Img" />
+                <p>Shipping</p>
+                <p>Tomorrow</p>
+                <p>Free</p>
+              </div>
+             
+              <div className="text-zinc-800 w-full border border-zinc-400 rounded-md flex flex-col
+                              items-center justify-center p-2">
+                <Image className="w-10" src={ship2Img} alt="ship2Img" />
+                <p>Pickup</p>
+                <p>Tomorrow</p>
+                <p>Free</p>
+              </div>
+
+              <div className="text-zinc-800 w-full border border-zinc-400 rounded-md flex flex-col
+                              items-center justify-center p-2">
+                <Image className="w-10" src={ship3Img} alt="ship3Img" />
+                <p>Delivery</p>
+                <p>Tomorrow</p>
               </div>
             </div>
+            <p className="font-bold text-xs">
+              Sacramento, 95829 {" "}
+              <span className="font-normal underline underline-offset-2 ml-1">
+                  Change
+              </span>
+            </p>
            </div>
+        </div>
         </div>
       </div>
     </div>
