@@ -5,6 +5,7 @@ import { BsInfoCircle, BsStarFill } from "react-icons/bs";
 import { IoMdHeartEmpty } from "react-icons/io";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/shopperSlice";
 
 const ProductDetails = () => {
   const router = useRouter();
@@ -97,7 +98,20 @@ const ProductDetails = () => {
           </div>
           {/* Add to Cart */}
           <div className="border-b-[1px] border-b-zinc-300 pb-4">
-            <button className="w-32 h-10 bg-blue text-white rounded-full hover:bg-[#004f9a] duration-300" >
+            <button onClick={()=>dispatch(addToCart(
+              {
+                _id: _id,
+                title: product.title,
+                description: product.description,
+                oldPrice: product.oldPrice,
+                price: product.price,
+                brand: product.brand,
+                image: product.image,
+                isNew: product.isNew,
+                category: product.category,
+                quantity:1
+              }
+            ))} className="w-32 h-10 bg-blue text-white rounded-full hover:bg-[#004f9a] duration-300" >
               Add to Cart
             </button>
           </div>

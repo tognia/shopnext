@@ -10,7 +10,7 @@ interface Props {
   productData : Product
 }
 
-export default function Home({productData}:Props) {
+const Home= ({productData}:Props) => {
 
   return (
     <>
@@ -41,3 +41,5 @@ export const getServerSideProps = async() => {
   }
   
 }
+
+export default Home;

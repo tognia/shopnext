@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { logo } from "../public/assets/images/index";
 import Image from "next/image";
-import { IoSearch, IoSearchOutline } from "react-icons/io5";
+import {  IoSearchOutline } from "react-icons/io5";
 import { AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 import { BsCart2 } from "react-icons/bs";
 import NavbarBottom from "./NavbarBottom";
@@ -9,7 +9,8 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const productData = useSelector((state:any)=> state.shopper.productData );
+  // const productData = useSelector((state:any)=> state.shopper.productData );
+  const productData = useSelector((state:any) => state?.shopper?.productData || []);
   const [totalAmt, setTotalAmt]= useState("");
 
   useEffect(()=>{
