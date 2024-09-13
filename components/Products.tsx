@@ -28,7 +28,7 @@ const Products = ({ productData }: any) => {
             <div className="flex justify-between py-2">
               <button
                 onClick={()=>dispatch(addToCart({
-                  id: item._id,
+                  _id: item._id,
                   title: item.title,
                   description: item.description,
                   oldPrice: item.oldPrice,

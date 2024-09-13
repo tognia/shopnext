@@ -27,8 +27,41 @@ export const shopperSlice = createSlice({
             }
             
         },
+
+        plusQuantity : (state, action) => {
+            const item = state.productData.find(
+                (item:StoreProduct) => item._id === action.payload._id
+            );
+
+            if(item) {
+                item.quantity++ ;
+            }
+        },
+
+        minusQuantity : (state, action) => {
+            const item = state.productData.find(
+                (item:StoreProduct) => item._id === action.payload._id
+            );
+
+            if(item?.quantity === 1){
+                item.quantity = 1
+            }
+            else {
+                item!.quantity-- ;
+            }
+        },
+
+        deleteItem : (state, action) => {
+            state.productData = state.productData.filter(
+                (item:StoreProduct) => item._id !== action.payload
+            );
+        },
+
+        resetCart : (state, action) => {
+            state.productData = [];
+        }
     },
 })
 
-export const { addToCart } = shopperSlice.actions;
+export const { addToCart, plusQuantity, minusQuantity, deleteItem, resetCart } = shopperSlice.actions;
 export default shopperSlice.reducer;

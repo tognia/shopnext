@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import { BsInfoCircle, BsStarFill } from "react-icons/bs";
 import { IoMdHeartEmpty } from "react-icons/io";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
 
 const ProductDetails = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [product, setProduct] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,7 +18,8 @@ const ProductDetails = () => {
     setIsLoading(false);
   }, []);
 
-  console.log(product);
+ const _id = Number(product._id);
+
   return (
     <div className="w-full bg-white">
       <div className="max-w-contentContainer mx-auto flex items-center py-4">
