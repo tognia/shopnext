@@ -6,6 +6,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/shopperSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProductDetails = () => {
   const router = useRouter();
@@ -111,7 +112,9 @@ const ProductDetails = () => {
                 category: product.category,
                 quantity:1
               }
-            ))} className="w-32 h-10 bg-blue text-white rounded-full hover:bg-[#004f9a] duration-300" >
+            )) && toast.success(`${product.title.substring(0, 20)} is added to cart`)
+            }
+             className="w-32 h-10 bg-blue text-white rounded-full hover:bg-[#004f9a] duration-300" >
               Add to Cart
             </button>
           </div>
@@ -154,6 +157,17 @@ const ProductDetails = () => {
         </div>
         </div>
       </div>
+      <Toaster
+        reverseOrder={false}
+        position="top-center"
+        toastOptions={{
+          style:{
+            borderRadius:"8px",
+            backgroundColor:"#333",
+            color:"#fff"
+          }
+        }}
+      />
     </div>
   );
 };
