@@ -167,7 +167,7 @@ const ProductDetails = () => {
             color:"#fff"
           }
         }}
-      />
+        />
     </div>
   );
 };
