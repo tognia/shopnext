@@ -28,15 +28,15 @@ const CartPage = () => {
             </span>
           </h1>
           {/* pickup details  */}
-          <div>
-            <div className="text-xl font-bold flex items-center gap-2 mb-2">
+          <div className="ml-2">
+            <div className="text-xl font-bold flex items-center gap-2 ml-2 mb-2">
               <Image className="w-10" src={phoneImg} alt="phoneImg" />
               <p>Pickup and Delivery Options</p>
             </div>
-            <div className="w-full grid grid-cols-3 gap-4 text-xs">
+            <div className="w-full grid grid-cols-3 gap-4 text-xs mb-2">
               <div
                 className="w-full border border-zinc-400 
-            rounded-md flex flex-col items-center justify-center gap-1 p-2"
+            rounded-md flex flex-col items-center justify-center gap-1 p-2 mr-2"
               >
                 <Image className="w-10" src={ship1Img} alt="ship1Img" />
                 <p className="font-bold">Shipping</p>
@@ -44,7 +44,7 @@ const CartPage = () => {
               </div>
               <div
                 className="w-full border border-zinc-400 
-            rounded-md flex flex-col items-center justify-center gap-1 p-2"
+            rounded-md flex flex-col items-center justify-center gap-1 p-2 mr-2"
               >
                 <Image className="w-10" src={ship2Img} alt="ship2Img" />
                 <p className="font-bold">Pickup</p>
@@ -52,7 +52,7 @@ const CartPage = () => {
               </div>
               <div
                 className="w-full border border-zinc-400 
-            rounded-md flex flex-col items-center justify-center gap-1 p-2"
+            rounded-md flex flex-col items-center justify-center gap-1 p-2 mr-2"
               >
                 <Image className="w-10" src={ship3Img} alt="ship3Img" />
                 <p className="font-bold">Delivery</p>
@@ -91,7 +91,6 @@ const CartPage = () => {
                             src={item.image}
                             alt="product img"
                           />
-                        </div>
                         <div>
                           <h2 className="text-base text-zinc-500">{item.title}</h2>
                           <p className="text-sm text-zinc-500">{item.description} </p>
@@ -103,14 +102,33 @@ const CartPage = () => {
                             </span>
                             Free 30-day returns
                           </p>
-                        </div>
-                        {/* Buttons */}
-                        <div>
+
+                            {/* Buttons */}
+                        <div className="mt-2 flex items-center gap-6">
                           <button className="text-sm underline underline-offset-2 decoration-[1px] text-zinc-600
-                          hover:no-underline hover:text-blue  duration-300">
+                          hover:no-underline hover:text-blue  duration-300 mb-1">
                             Remove
                           </button>
+                          <div className="w-28 h-9 border border-zinc-400 rounded-full text-base font-semibold
+                                          text-black flex items-center justify-between px-3">
+                            <button className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
+                                              rounded-full flex items-center justify-center cursor-pointer duration-200">
+                              <HiMinusSmall />
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
+                                              rounded-full flex items-center justify-center cursor-pointer duration-200">
+                              <MdOutlineAdd />
+                            </button>
+                          </div>
                         </div>
+
+                        </div>
+                      
+                       </div>
+                       <div className="w-1/4 text-right flex flex-col items-end gap-1">
+                          <p>{item.price}</p>
+                       </div>
                     </div>
                   ))
                 }
