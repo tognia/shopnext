@@ -42,13 +42,14 @@ export const shopperSlice = createSlice({
             const item = state.productData.find(
                 (item:StoreProduct) => item._id === action.payload._id
             );
-
+            if(item) {
             if(item?.quantity === 1){
                 item.quantity = 1
             }
             else {
-                item!.quantity-- ;
+                item.quantity-- ;
             }
+        }
         },
 
         deleteItem : (state, action) => {

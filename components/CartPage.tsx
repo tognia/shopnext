@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   emptyCart,
   phoneImg,
@@ -14,8 +14,11 @@ import { MdOutlineAdd } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import { StoreProduct } from "@/type";
+import FormatePrice from "./FormatePrice";
+import { minusQuantity, plusQuantity, resetCart } from "@/redux/shopperSlice";
 
 const CartPage = () => {
+  const dispatch = useDispatch();
   const productData = useSelector((state: any) => state.shopper.productData);
   return (
     <div className="w-full py-10 bg-white">
@@ -111,12 +114,36 @@ const CartPage = () => {
                           </button>
                           <div className="w-28 h-9 border border-zinc-400 rounded-full text-base font-semibold
                                           text-black flex items-center justify-between px-3">
-                            <button className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
-                                              rounded-full flex items-center justify-center cursor-pointer duration-200">
+                            <button onClick={() =>dispatch(minusQuantity({
+                              _id: item._id,
+                              title: item.title,
+                              description: item.description,
+                              oldPrice: item.oldPrice,
+                              price: item.price,
+                              quantity:1,
+                              brand: item.brand,
+                              image: item.image,
+                              isNew: item.isNew,
+                              category: item.category                             
+                            }))}
+                              className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
+                              rounded-full flex items-center justify-center cursor-pointer duration-200"
+                            >
                               <HiMinusSmall />
                             </button>
                             <span>{item.quantity}</span>
-                            <button className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
+                            <button onClick={()=> dispatch(plusQuantity({
+                               _id: item._id,
+                               title: item.title,
+                               description: item.description,
+                               oldPrice: item.oldPrice,
+                               price: item.price,
+                               quantity:1,
+                               brand: item.brand,
+                               image: item.image,
+                               isNew: item.isNew,
+                               category: item.category  
+                            }))} className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
                                               rounded-full flex items-center justify-center cursor-pointer duration-200">
                               <MdOutlineAdd />
                             </button>
@@ -127,12 +154,34 @@ const CartPage = () => {
                       
                        </div>
                        <div className="w-1/4 text-right flex flex-col items-end gap-1">
-                          <p>{item.price}</p>
+                          <p className="font-semibold text-xl text-[#2a8703] ">
+                             <FormatePrice amount={item.price * item.quantity} />
+                          </p>
+                          <p className="text-sm line-through text-zinc-500 ">
+                             <FormatePrice amount={item.oldPrice * item.quantity} />
+                          </p>
+                          <div className="flex items-center text-xs gap-2">
+                            <p className="bg-green-200 text-[8px] uppercase px-2 py-[1px]">
+                              You save
+                            </p>
+                            <p className="font-semibold text-[#2a8703]">
+                              <FormatePrice 
+                                amount={
+                                  item.oldPrice * item.quantity - item.price * item.quantity
+                                }
+                              />
+                            </p>
+                          </div>
                        </div>
                     </div>
                   ))
                 }
               </div>
+              <button onClick={() => dispatch(resetCart({}))}
+              className="w-44 bg-red-500 text-white h-10 rounded-full text-base font-semibold
+              hover:bg-red-800 duration-300">
+                Reset cart
+              </button>
             </div>
           </div>
         </div>
