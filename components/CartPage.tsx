@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   emptyCart,
@@ -15,11 +15,15 @@ import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import { StoreProduct } from "@/type";
 import FormatePrice from "./FormatePrice";
-import { minusQuantity, plusQuantity, resetCart } from "@/redux/shopperSlice";
+import { minusQuantity, plusQuantity, resetCart, deleteItem } from "@/redux/shopperSlice";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const productData = useSelector((state: any) => state.shopper.productData);
+  const [warningMsg, setWarningMsg] = useState(false);
+  useEffect(() => {
+    setWarningMsg(true);
+  },[]);
   return (
     <div className="w-full py-10 bg-white">
       <div className="w-full flex gap-10">
@@ -108,7 +112,7 @@ const CartPage = () => {
 
                             {/* Buttons */}
                         <div className="mt-2 flex items-center gap-6">
-                          <button className="text-sm underline underline-offset-2 decoration-[1px] text-zinc-600
+                          <button onClick={() => dispatch(deleteItem(item._id))} className="text-sm underline underline-offset-2 decoration-[1px] text-zinc-600
                           hover:no-underline hover:text-blue  duration-300 mb-1">
                             Remove
                           </button>
@@ -189,7 +193,45 @@ const CartPage = () => {
         <div
           className="w-1/3 p-4 mt-24 h-[500px] border-[1px] border-zinc-300
         rounded-md justify-center flex flex-col gap-4 "
-        ></div>
+        >
+          <div className="w-full flex flex-col gap-4 border-b-[1px] border-b-zinc-200 pb-4">
+          <button className="bg-blue hover:bg-hoverBg w-full text-white h-10 rounded font-semibold duration-300">
+            Continue to checkout
+          </button>
+          <p className="text-sm text-center text-red-500 -mt-4 font-semibold">
+            Please Sign for checkout
+          </p>
+          {
+            warningMsg && <div className="bg-[#002d58] text-white p-2 rounded-lg flex items-center
+                           justify-between gap-4">
+              <Image className="w-8" src={warningImg} alt="warningImg" />
+              <p className="text-sm">
+                Items in your cart have reduced prices. Check out now for extra savings !
+              </p>
+              <IoMdClose onClick={()=> setWarningMsg(false)} className="text-3xl hover:text-red-400 cursor-pointer duration-200"/>
+            </div>
+          }
+          <p className="text-sm text-center">
+            For the best shopping experience, {" "}
+            <span className="underline underline-offset-2 decoration-[1px]">
+              Sign In
+            </span>
+          </p>
+          </div>
+
+          {/* checkout price */}
+          <div className="w-full flex flex-col gap-4 border-b-[1px] border-b-zinc-200 pb-4">
+            <div className="flex flex-col gap-1">
+              <div className="text-sm flex justify-between">
+                <p className="font-semibold">
+                  Subtotal <span>
+                    ( {productData.length} items) 
+                      </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
