@@ -21,9 +21,26 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const productData = useSelector((state: any) => state.shopper.productData);
   const [warningMsg, setWarningMsg] = useState(false);
+  const [totalOldPrice, setTotalOldPrice] = useState(0);
+  const [totalSavings, setTotalSavings] = useState(0);
+  const [totalAmt, setTotalAmt] = useState(0);
+
   useEffect(() => {
     setWarningMsg(true);
-  },[]);
+    let oldPrice = 0;
+    let savings = 0;
+    let amt = 0;
+    productData.map((item: StoreProduct) => {
+      oldPrice += item.oldPrice * item.quantity;
+      savings += (item.oldPrice - item.price)* item.quantity;
+      amt += item.price * item.quantity;
+      return;      
+    });
+    setTotalOldPrice(oldPrice);
+    setTotalSavings(savings);
+    setTotalAmt(amt);
+  },[productData]);
+
   return (
     <div className="w-full py-10 bg-white">
       <div className="w-full flex gap-10">
@@ -228,9 +245,29 @@ const CartPage = () => {
                     ( {productData.length} items) 
                       </span>
                 </p>
+                <p className = "line-through text-zinc-500 text-base">
+                    <FormatePrice amount={totalOldPrice} />
+                </p>
+              </div>
+              <div className="text-sm flex justify-between">
+                <p className="font-semibold">Savings</p>
+                <p className="text-[#2a8703] font-bold bg-green-100 py-1 px-[2px] rounded-lg flex">
+                    - <FormatePrice amount={totalSavings} />
+                </p>
+              </div>
+              <div className="text-sm flex justify-between">
+                <p className="font-semibold">Total Amount</p>
+                <p className="text-zinc-800 font-normal text-base">
+                    <FormatePrice amount={totalAmt} />
+                </p>
               </div>
             </div>
           </div>
+
+          <div>
+            
+          </div>
+
         </div>
       </div>
     </div>
