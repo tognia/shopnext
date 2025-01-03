@@ -15,11 +15,21 @@ import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import { StoreProduct } from "@/type";
 import FormatePrice from "./FormatePrice";
-import { minusQuantity, plusQuantity, resetCart, deleteItem } from "@/redux/shopperSlice";
-
+import {
+  minusQuantity,
+  plusQuantity,
+  resetCart,
+  deleteItem,
+} from "@/redux/shopperSlice";
+import { loadStripe } from "@stripe/stripe-js";
+ 
 const CartPage = () => {
   const dispatch = useDispatch();
+
+  const stripePromise = loadStripe(process.env.stripe_public_key ?? '');//+
+
   const productData = useSelector((state: any) => state.shopper.productData);
+  const userInfo = useSelector((state: any) => state.shopper.userInfo);
   const [warningMsg, setWarningMsg] = useState(false);
   const [totalOldPrice, setTotalOldPrice] = useState(0);
   const [totalSavings, setTotalSavings] = useState(0);
@@ -32,14 +42,18 @@ const CartPage = () => {
     let amt = 0;
     productData.map((item: StoreProduct) => {
       oldPrice += item.oldPrice * item.quantity;
-      savings += (item.oldPrice - item.price)* item.quantity;
+      savings += (item.oldPrice - item.price) * item.quantity;
       amt += item.price * item.quantity;
-      return;      
+      return;
     });
     setTotalOldPrice(oldPrice);
     setTotalSavings(savings);
     setTotalAmt(amt);
-  },[productData]);
+  }, [productData]);
+
+  const handleCheckout = () => {
+    console.log("Done");
+  }
 
   return (
     <div className="w-full py-10 bg-white">
@@ -103,104 +117,131 @@ const CartPage = () => {
               </div>
               {/* ITEMS */}
               <div>
-                {
-                  productData.map((item:StoreProduct)=>(
-                    <div key={item._id} className="flex items-center justify-between gap-4 border-b-[1px]
-                    border-b-zinc-200 pb-4">
-                        <div className="w-3/4 flex items-center gap-2">
-                        <Image
-                            className="w-32"
-                            width={500}
-                            height={500}
-                            src={item.image}
-                            alt="product img"
-                          />
-                        <div>
-                          <h2 className="text-base text-zinc-500">{item.title}</h2>
-                          <p className="text-sm text-zinc-500">{item.description} </p>
-                          <p className="text-sm text-zinc-500">price: ${item.price} </p>
-                          <p className="text-sm text-zinc-500 flex items-center gap-1">
-                            <span className="bg-blue rounded-full text-white text-xs w-4 h-5
-                            flex items-center justify-center">
-                              <TbReload className="rotate-180" />
-                            </span>
-                            Free 30-day returns
-                          </p>
+                {productData.map((item: StoreProduct) => (
+                  <div
+                    key={item._id}
+                    className="flex items-center justify-between gap-4 border-b-[1px]
+                    border-b-zinc-200 pb-4"
+                  >
+                    <div className="w-3/4 flex items-center gap-2">
+                      <Image
+                        className="w-32"
+                        width={500}
+                        height={500}
+                        src={item.image}
+                        alt="product img"
+                      />
+                      <div>
+                        <h2 className="text-base text-zinc-500">
+                          {item.title}
+                        </h2>
+                        <p className="text-sm text-zinc-500">
+                          {item.description}{" "}
+                        </p>
+                        <p className="text-sm text-zinc-500">
+                          price: ${item.price}{" "}
+                        </p>
+                        <p className="text-sm text-zinc-500 flex items-center gap-1">
+                          <span
+                            className="bg-blue rounded-full text-white text-xs w-4 h-5
+                            flex items-center justify-center"
+                          >
+                            <TbReload className="rotate-180" />
+                          </span>
+                          Free 30-day returns
+                        </p>
 
-                            {/* Buttons */}
+                        {/* Buttons */}
                         <div className="mt-2 flex items-center gap-6">
-                          <button onClick={() => dispatch(deleteItem(item._id))} className="text-sm underline underline-offset-2 decoration-[1px] text-zinc-600
-                          hover:no-underline hover:text-blue  duration-300 mb-1">
+                          <button
+                            onClick={() => dispatch(deleteItem(item._id))}
+                            className="text-sm underline underline-offset-2 decoration-[1px] text-zinc-600
+                          hover:no-underline hover:text-blue  duration-300 mb-1"
+                          >
                             Remove
                           </button>
-                          <div className="w-28 h-9 border border-zinc-400 rounded-full text-base font-semibold
-                                          text-black flex items-center justify-between px-3">
-                            <button onClick={() =>dispatch(minusQuantity({
-                              _id: item._id,
-                              title: item.title,
-                              description: item.description,
-                              oldPrice: item.oldPrice,
-                              price: item.price,
-                              quantity:1,
-                              brand: item.brand,
-                              image: item.image,
-                              isNew: item.isNew,
-                              category: item.category                             
-                            }))}
+                          <div
+                            className="w-28 h-9 border border-zinc-400 rounded-full text-base font-semibold
+                                          text-black flex items-center justify-between px-3"
+                          >
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  minusQuantity({
+                                    _id: item._id,
+                                    title: item.title,
+                                    description: item.description,
+                                    oldPrice: item.oldPrice,
+                                    price: item.price,
+                                    quantity: 1,
+                                    brand: item.brand,
+                                    image: item.image,
+                                    isNew: item.isNew,
+                                    category: item.category,
+                                  })
+                                )
+                              }
                               className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
                               rounded-full flex items-center justify-center cursor-pointer duration-200"
                             >
                               <HiMinusSmall />
                             </button>
                             <span>{item.quantity}</span>
-                            <button onClick={()=> dispatch(plusQuantity({
-                               _id: item._id,
-                               title: item.title,
-                               description: item.description,
-                               oldPrice: item.oldPrice,
-                               price: item.price,
-                               quantity:1,
-                               brand: item.brand,
-                               image: item.image,
-                               isNew: item.isNew,
-                               category: item.category  
-                            }))} className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
-                                              rounded-full flex items-center justify-center cursor-pointer duration-200">
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  plusQuantity({
+                                    _id: item._id,
+                                    title: item.title,
+                                    description: item.description,
+                                    oldPrice: item.oldPrice,
+                                    price: item.price,
+                                    quantity: 1,
+                                    brand: item.brand,
+                                    image: item.image,
+                                    isNew: item.isNew,
+                                    category: item.category,
+                                  })
+                                )
+                              }
+                              className="text-base w-5 h-5 text-zinc-600 hover:bg-[#74767c] hover:text-white 
+                                              rounded-full flex items-center justify-center cursor-pointer duration-200"
+                            >
                               <MdOutlineAdd />
                             </button>
                           </div>
                         </div>
-
-                        </div>
-                      
-                       </div>
-                       <div className="w-1/4 text-right flex flex-col items-end gap-1">
-                          <p className="font-semibold text-xl text-[#2a8703] ">
-                             <FormatePrice amount={item.price * item.quantity} />
-                          </p>
-                          <p className="text-sm line-through text-zinc-500 ">
-                             <FormatePrice amount={item.oldPrice * item.quantity} />
-                          </p>
-                          <div className="flex items-center text-xs gap-2">
-                            <p className="bg-green-200 text-[8px] uppercase px-2 py-[1px]">
-                              You save
-                            </p>
-                            <p className="font-semibold text-[#2a8703]">
-                              <FormatePrice 
-                                amount={
-                                  item.oldPrice * item.quantity - item.price * item.quantity
-                                }
-                              />
-                            </p>
-                          </div>
-                       </div>
+                      </div>
                     </div>
-                  ))
-                }
+                    <div className="w-1/4 text-right flex flex-col items-end gap-1">
+                      <p className="font-semibold text-xl text-[#2a8703] ">
+                        <FormatePrice amount={item.price * item.quantity} />
+                      </p>
+                      <p className="text-sm line-through text-zinc-500 ">
+                        <FormatePrice amount={item.oldPrice * item.quantity} />
+                      </p>
+                      <div className="flex items-center text-xs gap-2">
+                        <p className="bg-green-200 text-[8px] uppercase px-2 py-[1px]">
+                          You save
+                        </p>
+                        <p className="font-semibold text-[#2a8703]">
+                          <FormatePrice
+                            amount={
+                              item.oldPrice * item.quantity -
+                              item.price * item.quantity
+                            }
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <button onClick={() => dispatch(resetCart({}))}
-              className="w-44 bg-red-500 text-white h-10 rounded-full text-base font-semibold
-              hover:bg-red-800 duration-300">
+              <button
+                onClick={() => dispatch(resetCart({}))}
+                className="w-44 bg-red-500 text-white h-10 rounded-full text-base font-semibold
+              hover:bg-red-800 duration-300"
+              >
                 Reset cart
               </button>
             </div>
@@ -212,28 +253,42 @@ const CartPage = () => {
         rounded-md justify-center flex flex-col gap-4 "
         >
           <div className="w-full flex flex-col gap-4 border-b-[1px] border-b-zinc-200 pb-4">
-          <button className="bg-blue hover:bg-hoverBg w-full text-white h-10 rounded font-semibold duration-300">
-            Continue to checkout
-          </button>
-          <p className="text-sm text-center text-red-500 -mt-4 font-semibold">
-            Please Sign for checkout
-          </p>
-          {
-            warningMsg && <div className="bg-[#002d58] text-white p-2 rounded-lg flex items-center
-                           justify-between gap-4">
-              <Image className="w-8" src={warningImg} alt="warningImg" />
-              <p className="text-sm">
-                Items in your cart have reduced prices. Check out now for extra savings !
+            {userInfo ? (
+              <button onClick={handleCheckout} className="bg-blue hover:bg-hoverBg w-full text-white h-10 rounded font-semibold duration-300">
+                Continue to checkout
+              </button>
+            ) : (
+              <button className="bg-blue bg-opacity-50 w-full cursor-not-allowed text-white h-10 rounded font-semibold duration-300">
+                Continue to checkout
+              </button>
+            )}
+            {!userInfo && (
+              <p className="text-sm text-center text-red-500 -mt-4 font-semibold">
+                Please Sign for checkout
               </p>
-              <IoMdClose onClick={()=> setWarningMsg(false)} className="text-3xl hover:text-red-400 cursor-pointer duration-200"/>
-            </div>
-          }
-          <p className="text-sm text-center">
-            For the best shopping experience, {" "}
-            <span className="underline underline-offset-2 decoration-[1px]">
-              Sign In
-            </span>
-          </p>
+            )}
+            {warningMsg && (
+              <div
+                className="bg-[#002d58] text-white p-2 rounded-lg flex items-center
+                           justify-between gap-4"
+              >
+                <Image className="w-8" src={warningImg} alt="warningImg" />
+                <p className="text-sm">
+                  Items in your cart have reduced prices. Check out now for
+                  extra savings !
+                </p>
+                <IoMdClose
+                  onClick={() => setWarningMsg(false)}
+                  className="text-3xl hover:text-red-400 cursor-pointer duration-200"
+                />
+              </div>
+            )}
+            <p className="text-sm text-center">
+              For the best shopping experience,{" "}
+              <span className="underline underline-offset-2 decoration-[1px]">
+                Sign In
+              </span>
+            </p>
           </div>
 
           {/* checkout price */}
@@ -241,48 +296,45 @@ const CartPage = () => {
             <div className="flex flex-col gap-1">
               <div className="text-sm flex justify-between">
                 <p className="font-semibold">
-                  Subtotal <span>
-                    ( {productData.length} items) 
-                      </span>
+                  Subtotal <span>( {productData.length} items)</span>
                 </p>
-                <p className = "line-through text-zinc-500 text-base">
-                    <FormatePrice amount={totalOldPrice} />
+                <p className="line-through text-zinc-500 text-base">
+                  <FormatePrice amount={totalOldPrice} />
                 </p>
               </div>
               <div className="text-sm flex justify-between">
                 <p className="font-semibold">Savings</p>
                 <p className="text-[#2a8703] font-bold bg-green-100 py-1 px-[2px] rounded-lg flex">
-                    - <FormatePrice amount={totalSavings} />
+                  - <FormatePrice amount={totalSavings} />
                 </p>
               </div>
               <div className="text-sm flex justify-between">
                 <p className="font-semibold">Total Amount</p>
                 <p className="text-zinc-800 font-normal text-base">
-                    <FormatePrice amount={totalAmt} />
+                  <FormatePrice amount={totalAmt} />
                 </p>
               </div>
             </div>
           </div>
 
           <div className="w-full flex flex-col gap-4 border-b-[1px] border-b-zinc-200 pb-4">
-            <div className="flex flex-col gap-1" >
+            <div className="flex flex-col gap-1">
               <div className="text-sm flex justify-between">
-                  <p>Shipping</p>
-                  <p className="text-[#2a8703]">Free</p>
+                <p>Shipping</p>
+                <p className="text-[#2a8703]">Free</p>
               </div>
               <div className="text-sm flex justify-between">
-                  <p className="font-semibold">Taxes</p>
-                  <p className="text-zinc-800">Calculated at checkout</p>
+                <p className="font-semibold">Taxes</p>
+                <p className="text-zinc-800">Calculated at checkout</p>
               </div>
             </div>
             <div className="flex items-center justify-between">
               <p>Estimated Total</p>
               <p className="text-zinc-800 font-bold text-lg">
-                    <FormatePrice amount={totalAmt} />
-                </p>
+                <FormatePrice amount={totalAmt} />
+              </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>

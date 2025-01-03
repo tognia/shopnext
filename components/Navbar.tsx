@@ -6,11 +6,16 @@ import { AiOutlineHeart, AiOutlineUser } from "react-icons/ai";
 import { BsCart2 } from "react-icons/bs";
 import NavbarBottom from "./NavbarBottom";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { addUser, removeUser } from "@/redux/shopperSlice";
 
 const Navbar = () => {
+  const {data : session} = useSession();
+  const dispatch = useDispatch();
   // const productData = useSelector((state:any)=> state.shopper.productData );
   const productData = useSelector((state:any) => state?.shopper?.productData || []);
+  const userInfo = useSelector((state:any) => state.shopper.userInfo );
   const [totalAmt, setTotalAmt]= useState("");
 
   useEffect(()=>{
@@ -21,6 +26,18 @@ const Navbar = () => {
     })
     setTotalAmt(price.toFixed(2))
   }, [productData])
+
+  useEffect(()=> {
+    if(session) {
+      dispatch(addUser({
+        name : session.user?.name,
+        email : session.user?.email,
+        image : session.user?.image,
+      }))
+    } else {
+      dispatch(removeUser());
+    }
+  }, [session, dispatch])
 
   return (
     <div className="w-full bg-blue text-white sticky top-0 z-50">
@@ -74,13 +91,29 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="navBarHover">
+          {userInfo?(
+            <div onClick={()=> signOut()} className="navBarHover">
+            <Image
+              width={500}
+              height={500}
+              className="w-10 rounded-full object-cover"
+              src={userInfo?.image}
+              alt="userImage"
+            />
+            <div>
+              <p className="text-xs">Sign Out</p>
+              <h2 className="text-base font-semibold -mt-1">{userInfo.name}</h2>
+            </div>
+          </div>
+          ):(
+            <div onClick={()=> signIn()} className="navBarHover">
             <AiOutlineUser className="text-lg" />
             <div>
               <p className="text-xs">Sign In</p>
               <h2 className="text-base font-semibold -mt-1">Account</h2>
             </div>
           </div>
+          )}
 
           <Link href="/cart">
           <div

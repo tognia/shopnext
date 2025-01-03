@@ -6,23 +6,29 @@ import { Open_Sans } from "next/font/google";
 import Layout from "@/components/Layout";
 import { Provider } from "react-redux";
 import { store,persistor } from "../redux/store";
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
+import { SessionProvider } from "next-auth/react"
 
 const open_sans = Open_Sans({
   subsets: ["latin"],
   variable: "--font_open-sans",
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ 
+  Component, 
+  pageProps:{session, ...pageProps}, 
+}: AppProps) {
   return (
     <Provider store={store}>
-      <PersistGate loading={"loading"} persistor={persistor}>
+     <SessionProvider session={session}>
+     <PersistGate loading={"loading"} persistor={persistor}>
       <main className={`${open_sans.variable} font-sans`}>
         <Layout>
           <Component {...pageProps} />
         </Layout>
       </main>
       </PersistGate>
+     </SessionProvider>
     </Provider>
   );
 }
